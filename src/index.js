@@ -2,7 +2,7 @@ const env = require('dotenv').config();
 const process = require('process');
 const fs = require('fs');
 const path = env.parsed.INI_PATH;
-const errorLogPath = '../logs/error.log';
+const errorLogPath = './logs/errors.log';
 fs.exists(path, function (doesExist) {
     if (!doesExist) process.exit();
 });
@@ -19,6 +19,7 @@ const host = '8.8.8.8';
 const frequency = 3000;
 const RETRY_INTERVAL = 10000;
 let connected = false;
+let fileDataText;
 let i = 0;
 let timeout;
 let startTime;
@@ -217,7 +218,7 @@ function readAndWrite(type, content = "") {
     if (type == 'read') {
         fs.readFile(errorLogPath, 'utf8', (err, data) => {
             if (err) {
-                fs.appendFileSync('functionError.log', err);
+                // fs.appendFileSync('functionError.log', err);
                 console.error(err);
                 return;
             }
@@ -233,13 +234,16 @@ function readAndWrite(type, content = "") {
             const contentData = `[${dateToday}] ${content} \n`
             fs.appendFileSync(errorLogPath, contentData);
         } catch (err) {
-            fs.appendFileSync('functionError.log', err);
+            // fs.appendFileSync('functionError.log', err);
             console.error(err);
         }
     }
 }
 
-
+function fileData(data) {
+    fileDataText = data
+    return data;
+}
 
 function test(t) {
     console.log(t);
